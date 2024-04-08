@@ -212,7 +212,13 @@ class SSIMCounterfactual(Resource):
             im = Image.open(img_buf)
             b64Image=PIL_to_base64(im)
 
-            response={"type":"image","explanation":b64Image}
+            exp_json={"Original Image": instance_raw.tolist()}
+            i=1
+            for cf in cf_indices:
+                exp_json["Counterfactual "+str(i)]=cf.tolist()
+                i=i+1
+
+            response={"type":"image","explanation":b64Image,"explanation_llm":exp_json}
             return response
         except:
             return traceback.format_exc(), 500

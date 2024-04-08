@@ -104,15 +104,19 @@ class SklearnPDP(Resource):
                 features=[i for i in range(len(dataframe.columns))] #defaults to all features
 
             fig, ax = plt.subplots(figsize=(18,math.ceil(len(features)/3)*6))
-            PartialDependenceDisplay.from_estimator(model,dataframe,features,categorical_features=categorical_features,feature_names=dataframe.columns,kind="average",ax=ax,target=target)
+            plot=PartialDependenceDisplay.from_estimator(model,dataframe,features,categorical_features=categorical_features,feature_names=dataframe.columns,kind="average",ax=ax,target=target)
 
+            def parse_dict(x):
+                if hasattr(x, "tolist"):  # numpy arrays have this
+                    return x.tolist()
+                raise TypeError(x)
             #saving
             img_buf = BytesIO()
             plt.savefig(img_buf,bbox_inches="tight")
             im = Image.open(img_buf)
             b64Image=PIL_to_base64(im)
 
-            response={"type":"html","explanation":b64Image}
+            response={"type":"html","explanation":b64Image,"explanation_llm":json.loads(json.dumps(plot.pd_results, default=parse_dict))}
             return response
         except:
             return traceback.format_exc(), 500

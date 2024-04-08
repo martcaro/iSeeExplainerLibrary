@@ -113,7 +113,6 @@ class Nice(Resource):
 
             instance_pred=np.array(predic_func(norm_instance)[0])
 
-
             ## params from the request
             optimization_criteria="sparsity"
             desired_class="other"
@@ -128,12 +127,8 @@ class Nice(Resource):
             NICE_res = NICE(predic_func,X,categorical_features,y_train=y,optimization=optimization_criteria)
             CF = NICE_res.explain(norm_instance,target_class=desired_class)[0]
 
-            print(norm_instance.shape)
             instance_row=np.array(np.append(norm_instance,np.argmax(instance_pred)))
             cf_row=np.array(list(CF)+[np.argmax(predic_func([CF])[0])])
-
-            print(instance_row.shape)
-            print(cf_row.shape)
 
             df = pd.DataFrame(data = np.array([instance_row,cf_row]), 
                       index = ["Original Instance","Counterfactual"], 
@@ -157,7 +152,7 @@ class Nice(Resource):
             #    hti.screenshot(html_str=df.to_html(), save_as=filename+".png")
         
 
-            response={"type":"html","explanation":df_norm.to_html().replace("\n"," ")}
+            response={"type":"html","explanation":df_norm.to_html().replace("\n"," "),"explanation_llm":json.loads(df_norm.to_json(orient="index"))}
             return response
 
         except:

@@ -110,7 +110,7 @@ class HsicAttributionMethodExp(Resource):
             im = Image.open(img_buf)
             b64Image=PIL_to_base64(im)
 
-            response={"type":"image","explanation":b64Image}#,"explanation":json.loads(explanation.to_json())}
+            response={"type":"image","explanation":b64Image,"explanation_llm":explanations.tolist()}
             return response
         except:
             return traceback.format_exc(), 500

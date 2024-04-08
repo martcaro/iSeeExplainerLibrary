@@ -2,6 +2,7 @@ from http.client import BAD_REQUEST
 from flask_restful import Resource
 import joblib
 import json
+import pandas as pd
 from explainerdashboard import ClassifierExplainer
 from explainerdashboard.dashboard_components.classifier_components import PrAucComponent
 from flask import request
@@ -80,7 +81,6 @@ class PRAUC(Resource):
                 except Exception as e:
                     return "Could not convert to label to string: " + str(e),BAD_REQUEST
 
-        
             if model_task in ontologyConstants.CLASSIFICATION_URIS:
                 explainer = ClassifierExplainer(model, dataframe.drop([target_name], axis=1, inplace=False), dataframe[target_name],labels=output_names)
             else:
@@ -88,9 +88,14 @@ class PRAUC(Resource):
             if label is None:
                 label=output_names[explainer.pos_label]
             exp=PrAucComponent(explainer,title ="PR AUC Plot for Class " + str(label),pos_label=label,cutoff=cutoff)
+            
             exp_html=exp.to_html().replace('\n', ' ').replace("\"","'")
+            exp_json=explainer.pr_auc_curve()
+            exp_json["precision"]=exp_json["precision"].tolist()
+            exp_json["recall"]=exp_json["recall"].tolist()
+            exp_json["thresholds"]=exp_json["thresholds"].tolist()
 
-            response={"type":"html","explanation":exp_html}
+            response={"type":"html","explanation":exp_html,"explanation_llm":exp_json}
             return response
 
         except:

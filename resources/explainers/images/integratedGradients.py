@@ -123,7 +123,7 @@ class IntegratedGradientsImage(Resource):
 
             # a0.imshow(im)
             # a0.set_title("Original Image")
-
+            heatmap=attr
             if(plot_type=="attributions"):
 
                 if(im.shape[-1]!=3):
@@ -180,11 +180,11 @@ class IntegratedGradientsImage(Resource):
                 print(heatmap.shape)
 
                 if(heatmap.shape[-1]==3): #it's an RGB image, we transform to grayscale to impose the heatmap
-                   heatmap=Image.fromarray(heatmap).convert('L')
+                   heatmap_img=Image.fromarray(heatmap).convert('L')
 
                 jet = cm.get_cmap("jet")
                 jet_colors = jet(np.arange(256))[:, :3]
-                jet_heatmap = jet_colors[heatmap]
+                jet_heatmap = jet_colors[heatmap_img]
                 jet_heatmap=np.uint8(255 * jet_heatmap)
                 if len(im.shape)==2:
                     im=im.reshape(im.shape+(1,))
@@ -214,7 +214,7 @@ class IntegratedGradientsImage(Resource):
             im = Image.open(img_buf)
             b64Image=PIL_to_base64(im)
 
-            response={"type":"image","explanation":b64Image}#,"explanation":json.loads(explanation.to_json())}
+            response={"type":"image","explanation":b64Image,"explanation_llm":heatmap.tolist()}
             return response
         except:
             return traceback.format_exc(), 500

@@ -221,6 +221,8 @@ class NLPClassifierExpl(Resource):
                 # JSON explanation
                 response={"type":"dict","explanation":explanation}
 
+            response["explanation_llm"]=explanation
+
             return response
 
 

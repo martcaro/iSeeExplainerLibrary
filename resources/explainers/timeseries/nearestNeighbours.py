@@ -145,7 +145,7 @@ class TSNearestNeighbours(Resource):
             )
             exp=fig.to_html(include_plotlyjs="cdn").replace("\n"," ").replace('"',"'")
 
-            response={"type":"html","explanation":exp}#,"explanation":dict_exp}
+            response={"type":"html","explanation":exp,"explanation_llm":json.loads(df.to_json())}
             return response
         except:
             return traceback.format_exc(), 500        

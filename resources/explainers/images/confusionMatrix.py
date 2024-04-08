@@ -10,6 +10,7 @@ import h5py
 import json
 from io import BytesIO
 import matplotlib.pyplot as plt
+import pandas as pd
 from sklearn.metrics import ConfusionMatrixDisplay
 from getmodelfiles import get_model_files
 from utils import ontologyConstants
@@ -146,7 +147,9 @@ class ConfusionMatrixImages(Resource):
 
             print(preds.shape)
             print(actual.shape)
-            ConfusionMatrixDisplay.from_predictions(actual, preds,display_labels=output_names)
+            plot=ConfusionMatrixDisplay.from_predictions(actual, preds,display_labels=output_names)
+
+            print()
     
             #saving
             img_buf = BytesIO()
@@ -154,7 +157,12 @@ class ConfusionMatrixImages(Resource):
             im = Image.open(img_buf)
             b64Image=PIL_to_base64(im)
 
-            response={"type":"image","explanation":b64Image}
+            def parse_dict(x):
+                if hasattr(x, "tolist"): 
+                    return x.tolist()
+                raise TypeError(x)
+
+            response={"type":"image","explanation":b64Image,"explanation_llm":json.loads(pd.DataFrame(plot.confusion_matrix, columns=["Predicted " + s for s in output_names], index=["Actual " + s for s in output_names]).to_json(orient="index"))}
             return response
         except:
             return traceback.format_exc(), 500

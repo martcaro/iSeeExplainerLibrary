@@ -34,7 +34,7 @@ class ROCAUC(Resource):
 
 
     def explain(self,_id,params_json):
-        try:
+
             #getting model info, data, and file from local repository
             model_file, model_info_file, data_file = get_model_files(_id,self.model_folder)
 
@@ -89,11 +89,13 @@ class ROCAUC(Resource):
                 label=output_names[explainer.pos_label]
             exp=RocAucComponent(explainer,title ="ROC AUC Plot for Class " + str(label),pos_label=label,cutoff=cutoff)
             exp_html=exp.to_html().replace('\n', ' ').replace("\"","'")
-
-            response={"type":"html","explanation":exp_html}
+            exp_json=explainer.roc_auc_curve()
+            exp_json["fpr"]=exp_json["fpr"].tolist()
+            exp_json["tpr"]=exp_json["tpr"].tolist()
+            exp_json["thresholds"]=exp_json["thresholds"].tolist()
+            
+            response={"type":"html","explanation":exp_html,"explanation_llm":exp_json}
             return response
-        except:
-            return traceback.format_exc(), 500
 
     def get(self,id=None):
         

@@ -123,7 +123,8 @@ class Anchors(Resource):
                 ret = dict(anchor=(' AND '.join(explanation.anchor)),precision=explanation.precision, coverage=explanation.coverage)
             else:
                 ret = dict(anchor=(' AND '.join(explanation.anchor)),precision=explanation.precision[0], coverage=explanation.coverage)
-            return {"type":"dict","explanation":json.loads(json.dumps(ret))}
+            exp_json=json.loads(json.dumps(ret))
+            return {"type":"dict","explanation":exp_json,"explanation_llm":exp_json}
 
         except:
             return traceback.format_exc(), 500

@@ -54,7 +54,7 @@ class DicePrivate(Resource):
             model_info=json.load(model_info_file)
             backend = model_info["backend"] 
             target_names=model_info["attributes"]["target_names"]
-            output_names=model_info["attributes"]["features"][target_name]["values_raw"]
+            output_names=model_info["attributes"]["features"][target_names[0]]["values_raw"]
             outcome_name=target_names[0]
             feature_names=list(dataframe.columns)
             for target in target_names:
@@ -151,8 +151,10 @@ class DicePrivate(Resource):
             #    hti.screenshot(html_str=str_html, save_as=filename+".png",size=size)
             #else:
             #    hti.screenshot(html_str=str_html, save_as=filename+".png")
+
+            
         
-            response={"type":"html","explanation":str_html}
+            response={"type":"html","explanation":str_html,"explanation_llm":json.loads(e1.to_json())}
             return response
 
         except:

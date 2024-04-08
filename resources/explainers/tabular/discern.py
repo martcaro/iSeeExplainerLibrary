@@ -125,7 +125,7 @@ class DisCERN(Resource):
                 cf, cf_label, s, p = discern_obj.find_cf(norm_instance[0], test_label, desired_class)
             except Exception as e:
                 print(e)
-                return {"type":"text", "explanation":"Counterfactual not found."}
+                return {"type":"text", "explanation":"Counterfactual not found.", "explanation_llm":"Counterfactual not found."}
             
             norm_instance=np.append(norm_instance,test_label)
             cf=np.append(cf,cf_label)
@@ -150,7 +150,7 @@ class DisCERN(Resource):
             #    hti.screenshot(html_str=str_html, save_as=filename+".png")
        
         
-            response={"type":"html","explanation":str_html.replace("\n"," ")}
+            response={"type":"html","explanation":str_html.replace("\n"," "),"explanation_llm":json.loads(result_df_norm.to_json(orient="index"))}
             return response
         except:
             return traceback.format_exc(), 500

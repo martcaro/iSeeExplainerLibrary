@@ -109,8 +109,12 @@ class SklearnICE(Resource):
             if(not features):
                 return {"type":"text","explanation":"ICE can only be plotted for continuous features and none were found."}
 
-            print([list(dataframe.columns)[f] for f in features])
-            PartialDependenceDisplay.from_estimator(model,dataframe,features,categorical_features=categorical_features,feature_names=dataframe.columns,kind="both",ax=ax,target=target)
+            plot=PartialDependenceDisplay.from_estimator(model,dataframe,features,categorical_features=categorical_features,feature_names=dataframe.columns,kind="both",ax=ax,target=target)
+
+            def parse_dict(x):
+                if hasattr(x, "tolist"): 
+                    return x.tolist()
+                raise TypeError(x)
 
             #saving
             img_buf = BytesIO()
@@ -118,7 +122,7 @@ class SklearnICE(Resource):
             im = Image.open(img_buf)
             b64Image=PIL_to_base64(im)
 
-            response={"type":"html","explanation":b64Image}
+            response={"type":"html","explanation":b64Image,"explanation_llm":json.loads(json.dumps(plot.pd_results, default=parse_dict))}
             return response
 
         except:

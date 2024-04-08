@@ -24,7 +24,7 @@ class ShapDeepLocal(Resource):
         self.upload_folder = upload_folder  
 
     def post(self):
-        try:
+
             params = request.json
             if params is None:
                 return "The json body is missing.",BAD_REQUEST
@@ -96,7 +96,7 @@ class ShapDeepLocal(Resource):
         
             # Create explanation
             explainer = shap.DeepExplainer(model,dataframe.to_numpy())
-            shap_values = explainer.shap_values(norm_instance)
+            shap_values = explainer.shap_values(np.expand_dims(norm_instance,axis=0))
 
             if(len(np.array(shap_values).shape)!=1 and np.array(shap_values).shape[0]!=1):
                 explainer.expected_value=explainer.expected_value[index]
@@ -115,9 +115,6 @@ class ShapDeepLocal(Resource):
                     print("No plot with the specified name was found. Defaulting to waterfall plot.")
                 shap.plots._waterfall.waterfall_legacy(explainer.expected_value,shap_values=shap_values[0],features=np.array(list(df_inst.to_dict("records")[0].values())),feature_names=feature_names,show=False)
        
-            #formatting json output
-            #shap_values = [x.tolist() for x in shap_values]
-            #ret=json.loads(json.dumps(shap_values))
 
             ##saving
             img_buf = BytesIO()
@@ -127,11 +124,10 @@ class ShapDeepLocal(Resource):
             plt.close()
         
             #Insert code for image uploading and getting url
-            response={"type":"image","explanation":b64Image}
+            response={"type":"image","explanation":b64Image,"explanation_llm":json.loads(pd.DataFrame(shap_values, columns=feature_names).to_json(orient="index"))}
 
-            return responses
-        except:
-            return traceback.format_exc(), 500
+            return response
+
 
     def get(self,id=None):
         

@@ -173,7 +173,7 @@ class GradCam(Resource):
 
                 #vector to base 64
                 b64Image=PIL_to_base64(superimposed_img)
-                response={"type":"image","explanation":b64Image}#,"explanation":json.loads(explanation.to_json())}
+                response={"type":"image","explanation":b64Image,"explanation_llm":heatmap.tolist()}
                 return response
 
             else:

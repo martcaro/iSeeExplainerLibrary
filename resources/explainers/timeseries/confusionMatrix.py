@@ -126,9 +126,10 @@ class TSConfusionMatrix(Resource):
 
 
             exp=ConfusionMatrixComponent(explainer,cutoff=cutoff,binary=False)
+            exp_json=json.loads(pd.DataFrame(explainer.confusion_matrix(cutoff, binary=False), columns=["Predicted " + s for s in output_names], index=["Actual " + s for s in output_names]).to_json(orient="index"))
             exp_html=exp.to_html().replace('\n', ' ').replace("\"","'")
 
-            response={"type":"html","explanation":exp_html}
+            response={"type":"html","explanation":exp_html,"explanation_llm":exp_json}
             return response
         except:
             return traceback.format_exc(), 500

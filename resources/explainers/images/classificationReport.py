@@ -105,6 +105,8 @@ class ClassificationReport(Resource):
             params_json=params["params"]
         params_json=validate_params(params_json,self.get(_id)["params"])
 
+        params_json=validate_params(params_json,self.get(_id)["params"])
+
         return self.explain(_id, instance, params_json)
     
     def explain(self, model_id, instance, params_json):
@@ -144,7 +146,7 @@ class ClassificationReport(Resource):
             d.pop("accuracy")
             exp=pd.DataFrame(d).transpose()
 
-            response={"type":"html","explanation":exp.to_html()}
+            response={"type":"html","explanation":exp.to_html(),"explanation_llm":d}
             return response
         except:
             return traceback.format_exc(), 500
