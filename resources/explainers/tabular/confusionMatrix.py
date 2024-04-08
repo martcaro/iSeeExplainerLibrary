@@ -1,7 +1,9 @@
 from http.client import BAD_REQUEST
+from pyexpat import EXPAT_VERSION
 from flask_restful import Resource
 import joblib
 import json
+import pandas as pd
 from explainerdashboard import ClassifierExplainer
 from explainerdashboard.dashboard_components.classifier_components import ConfusionMatrixComponent
 from flask import request
@@ -78,9 +80,10 @@ class ConfusionMatrix(Resource):
                     return "Could not convert to cuttoff to float: " + str(e),BAD_REQUEST
 
             exp=ConfusionMatrixComponent(explainer,cutoff=cutoff,binary=False)
+            exp_json=json.loads(pd.DataFrame(explainer.confusion_matrix(cutoff, binary=False), columns=["Predicted " + s for s in output_names], index=["Actual " + s for s in output_names]).to_json(orient="index"))
             exp_html=exp.to_html().replace('\n', ' ').replace("\"","'")
 
-            response={"type":"html","explanation":exp_html}
+            response={"type":"html","explanation":exp_html,"explanation_llm":exp_json}
             return response
 
         except:

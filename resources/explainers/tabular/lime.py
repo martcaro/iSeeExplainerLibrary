@@ -161,7 +161,6 @@ class Lime(Resource):
 
             hti = Html2Image()
             hti.output_path= os.getcwd()
-            print(hti.output_path)
             size=(10, 4)
             css="body {background: white;}"
             if "png_height" in params_json and "png_width" in params_json:
@@ -174,7 +173,7 @@ class Lime(Resource):
             b64Image=PIL_to_base64(im)
             os.remove("temp.png")
 
-            response={"type":"image","explanation":b64Image}
+            response={"type":"image","explanation":b64Image,"explanation_llm":json.loads(json.dumps(dict(explanation.as_list())))}
             return response
 
         except:

@@ -149,7 +149,13 @@ class Leftist(Resource):
             b64Image=PIL_to_base64(im)
             plt.close()
 
-            response={"type":"image","explanation":b64Image}#,"explanation":dict_exp}
+            json_exp={}
+            for i in range(len(explanation[1])-1):
+                json_exp[str(explanation[1][i])+"_"+str(explanation[1][i+1])]=explanation[0][i]
+            json_exp[str(explanation[1][i])+"_"+str(model_info["attributes"]["features"][feature]["shape"][-1])]=explanation[0][-1]
+            segments={"segments":json_exp}
+
+            response={"type":"image","explanation":b64Image,"explanation_llm":segments}
             return response
         except:
             return traceback.format_exc(), 500        

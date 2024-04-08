@@ -123,7 +123,7 @@ class Pertcf(Resource):
             denorm_explanation=denormalize_dataframe(norm_explanation,model_info)
             denorm_explanation.index.name=None
 
-            ret={"type":"html", "explanation":denorm_explanation.to_html()}
+            ret={"type":"html", "explanation":denorm_explanation.to_html(),"explanation_llm":json.loads(denorm_explanation.to_json(orient="index"))}
             return ret
 
         except:

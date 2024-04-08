@@ -69,14 +69,14 @@ class RegressionPredictedVsActual(Resource):
             exp=PredictedVsActualComponent(explainer)
             exp_html=exp.to_html().replace('\n', ' ').replace("\"","'")
 
-            response={"type":"html","explanation":exp_html}
+            response={"type":"html","explanation":exp_html,"explanation_llm":exp_html}
             return response
         except:
             return traceback.format_exc(), 500
 
     def get(self,id=None):
         return {
-        "_method_description": "Displays a plot of values predicted for the instances against their actual target values.. Only supports scikit-learn-based models. This method accepts only 1 argument: " 
+        "_method_description": "Displays a plot of values predicted for the instances against their actual target values. Only supports scikit-learn-based models. This method accepts only 1 argument: " 
                            "the model 'id'.",
         "id": "Identifier of the ML model that was stored locally.",
         "output_description":{

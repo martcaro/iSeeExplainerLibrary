@@ -88,7 +88,7 @@ class ShapDependence(Resource):
             exp=ShapDependenceComponent(explainer,col=feature,color_col=interaction_feature)
             exp_html=exp.to_html().replace('\n', ' ').replace("\"","'")
 
-            response={"type":"html","explanation":exp_html}
+            response={"type":"html","explanation":exp_html,"explanation_llm":exp_html}
             return response
         except:
             return traceback.format_exc(), 500

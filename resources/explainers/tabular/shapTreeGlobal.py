@@ -4,6 +4,7 @@ import numpy as np
 import joblib
 import json
 import shap
+import pandas as pd
 from flask_restful import Resource
 from flask import request
 from PIL import Image
@@ -101,7 +102,7 @@ class ShapTreeGlobal(Resource):
             b64Image=PIL_to_base64(im)
             plt.close()
             #Insert code for image uploading and getting url
-            response={"type":"image","explanation":b64Image}
+            response={"type":"image","explanation":b64Image,"explanation_llm":json.loads(pd.DataFrame(shap_values, columns=feature_names).to_json(orient="index"))}
 
             return response
         except:

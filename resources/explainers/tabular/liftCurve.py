@@ -94,7 +94,7 @@ class LiftCurve(Resource):
             exp=LiftCurveComponent(explainer,title ="Lift Curve for Class " + str(label),pos_label=label,cutoff=cutoff)
             exp_html=exp.to_html().replace('\n', ' ').replace("\"","'")
 
-            response={"type":"html","explanation":exp_html}
+            response={"type":"html","explanation":exp_html,"explanation_llm":json.loads(explainer.get_liftcurve_df().to_json(orient="index"))}
             return response
 
         except:

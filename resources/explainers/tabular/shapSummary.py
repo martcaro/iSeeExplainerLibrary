@@ -68,10 +68,10 @@ class ShapSummary(Resource):
                 return "AI task not supported. This expliners only supports scikit-learn-based classifiers or regressors.",BAD_REQUEST
 
             exp=ShapSummaryComponent(explainer)
+
             exp_html=exp.to_html().replace('\n', ' ').replace("\"","'")
 
-            response={"type":"html","explanation":exp_html}
-            return response
+            response={"type":"html","explanation":exp_html,"explanation_llm":exp_html}
         except:
             return traceback.format_exc(), 500
 

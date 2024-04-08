@@ -121,7 +121,7 @@ class ShapKernelLocal(Resource):
 
             # Create data
             explainer = shap.KernelExplainer(predic_func, dataframe,**{k: v for k, v in kwargsData.items()})
-            shap_values = explainer.shap_values(norm_instance)
+            shap_values = explainer.shap_values(np.expand_dims(norm_instance,axis=0))
         
             if(len(np.array(shap_values).shape)!=1):
                 explainer.expected_value=explainer.expected_value[index]
@@ -130,17 +130,17 @@ class ShapKernelLocal(Resource):
             #plotting
             plt.switch_backend('agg')
             if plot_type=="bar":
-                shap.plots._bar.bar_legacy(shap_values,features=np.array(list(df_inst.to_dict("records")[0].values())),feature_names=kwargsData["feature_names"],show=False)
+                shap.plots._bar.bar_legacy(shap_values[0],features=np.array(list(df_inst.to_dict("records")[0].values())),feature_names=kwargsData["feature_names"],show=False)
             elif plot_type=="decision":
-                shap.decision_plot(explainer.expected_value,shap_values=shap_values,features=np.array(list(df_inst.to_dict("records")[0].values())),feature_names=kwargsData["feature_names"])
+                shap.decision_plot(explainer.expected_value,shap_values=shap_values[0],features=np.array(list(df_inst.to_dict("records")[0].values())),feature_names=kwargsData["feature_names"])
             elif plot_type=="force":
-                    shap.plots._force.force(explainer.expected_value,shap_values=shap_values,features=np.array(list(df_inst.to_dict("records")[0].values())),feature_names=kwargsData["feature_names"],out_names=target_name,matplotlib=True,show=False)
+                    shap.plots._force.force(explainer.expected_value,shap_values=shap_values[0],features=np.array(list(df_inst.to_dict("records")[0].values())),feature_names=kwargsData["feature_names"],out_names=target_name,matplotlib=True,show=False)
             else:
                 if plot_type==None:
                     print("No plot type was specified. Defaulting to waterfall plot.")
                 elif plot_type!="waterfall":
                     print("No plot with the specified name was found. Defaulting to waterfall plot.")
-                shap.plots._waterfall.waterfall_legacy(explainer.expected_value,shap_values=shap_values,features=np.array(list(df_inst.to_dict("records")[0].values())),feature_names=kwargsData["feature_names"],show=False)
+                shap.plots._waterfall.waterfall_legacy(explainer.expected_value,shap_values=shap_values[0],features=np.array(list(df_inst.to_dict("records")[0].values())),feature_names=kwargsData["feature_names"],show=False)
        
             #saving force plot to html (DEPRECATED)
             #additive_exp = shap.force_plot(explainer.expected_value, shap_values,features=np.array(instance),feature_names=kwargsData["feature_names"],out_names=out_names,show=False)
@@ -156,7 +156,7 @@ class ShapKernelLocal(Resource):
             b64Image=PIL_to_base64(im)
             plt.close()
 
-            response={"type":"image","explanation":b64Image}
+            response={"type":"image","explanation":b64Image,"explanation_llm":json.loads(pd.DataFrame(shap_values, columns=feature_names).to_json(orient="index"))}
 
             return response
         except:

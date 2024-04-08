@@ -79,7 +79,7 @@ class CumulativePrecision(Resource):
             exp=CumulativePrecisionComponent(explainer,pos_label=label)
             exp_html=exp.to_html().replace('\n', ' ').replace("\"","'")
 
-            response={"type":"html","explanation":exp_html}
+            response={"type":"html","explanation":exp_html,"explanation_llm":exp_html}
             return response
 
         except:

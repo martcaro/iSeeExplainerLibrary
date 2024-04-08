@@ -281,7 +281,7 @@ class IGenCBR(Resource):
             im = Image.open(img_buf)
             b64Image=PIL_to_base64(im)
 
-            response={"type":"image","explanation":b64Image}#,"explanation":dict_exp}
+            response={"type":"image","explanation":b64Image,"explanation_llm":plotdata_raw}
             return response
         except:
             return traceback.format_exc(), 500        

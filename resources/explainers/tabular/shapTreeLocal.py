@@ -136,7 +136,7 @@ class ShapTreeLocal(Resource):
             b64Image=PIL_to_base64(im)
             plt.close()
         
-            response={"type":"image","explanation":b64Image}
+            response={"type":"image","explanation":b64Image,"explanation_llm":json.loads(pd.DataFrame(shap_values, columns=feature_names).to_json(orient="index"))}
 
             return response
         except:

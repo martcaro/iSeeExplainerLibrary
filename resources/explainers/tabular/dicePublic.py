@@ -167,7 +167,7 @@ class DicePublic(Resource):
             #    hti.screenshot(html_str=str_html, save_as=filename+".png")
             #response={"plot_html":getcall+".html","plot_png":getcall+".png","explanation":json.loads(e1.to_json())}
         
-            response={"type":"html","explanation":str_html.replace("\n"," ")}
+            response={"type":"html","explanation":str_html.replace("\n"," "),"explanation_llm":json.loads(e1.to_json())}
             return response
 
         except:

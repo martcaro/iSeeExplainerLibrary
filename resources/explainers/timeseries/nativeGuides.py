@@ -217,7 +217,7 @@ class NativeGuides(Resource):
             b64Image=PIL_to_base64(im)
             plt.close()
 
-            response={"type":"image","explanation":b64Image}#,"explanation":dict_exp}
+            response={"type":"image","explanation":b64Image,"explanation_llm":json.loads(df.to_json())}
             return response
         except:
             return traceback.format_exc(), 500        

@@ -56,7 +56,7 @@ class AIModelPerformance(Resource):
             
             result_df = pd.DataFrame(np.array(evals), columns=["Assessment Metric", "Value"])
             str_html= result_df.to_html(index=False)+'<br>'
-            response={"type":"html", "explanation":str_html}
+            response={"type":"html", "explanation":str_html,"explanation_llm":result_df.to_json()}
             return response
         except:
             return traceback.format_exc(), 500
@@ -69,7 +69,7 @@ class AIModelPerformance(Resource):
                 "selected_metrics" : "(Optional) Array of performance metrics required. Default returns all available.",
             },
         "output_description":{
-                "html": "This explanation presents the perfromance metrics of the AI System."
+                "html": "This explanation presents the performance metrics of the AI System."
                },
         "meta":{
                 "modelAccess":"Any",

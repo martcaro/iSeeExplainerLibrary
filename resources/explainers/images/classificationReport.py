@@ -13,6 +13,7 @@ from sklearn.metrics import classification_report
 from getmodelfiles import get_model_files
 from utils import ontologyConstants
 from utils.img_processing import normalise_image_batch
+from utils.validation import validate_params
 import traceback
 
 class ClassificationReport(Resource):
@@ -103,6 +104,8 @@ class ClassificationReport(Resource):
         if "params" in params:
             params_json=params["params"]
 
+        params_json=validate_params(params_json,self.get(_id)["params"])
+
         return self.explain(_id, instance, params_json)
     
     def explain(self, model_id, instance, params_json):
@@ -142,7 +145,7 @@ class ClassificationReport(Resource):
             d.pop("accuracy")
             exp=pd.DataFrame(d).transpose()
 
-            response={"type":"html","explanation":exp.to_html()}
+            response={"type":"html","explanation":exp.to_html(),"explanation_llm":d}
             return response
         except:
             return traceback.format_exc(), 500
