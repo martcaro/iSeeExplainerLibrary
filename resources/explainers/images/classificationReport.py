@@ -103,6 +103,7 @@ class ClassificationReport(Resource):
         params_json={}
         if "params" in params:
             params_json=params["params"]
+        params_json=validate_params(params_json,self.get(_id)["params"])
 
         params_json=validate_params(params_json,self.get(_id)["params"])
 
