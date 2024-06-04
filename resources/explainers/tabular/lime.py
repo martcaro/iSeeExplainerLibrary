@@ -161,7 +161,7 @@ class Lime(Resource):
 
             hti = Html2Image()
             # hti.output_path= os.getcwd()
-            hti.output_path= os.getcwd() + "./tmp"
+            hti.output_path= os.getcwd() + "/tmp"
             size=(10, 4)
             css="body {background: white;}"
             if "png_height" in params_json and "png_width" in params_json:
