@@ -170,7 +170,7 @@ class Lime(Resource):
             else:
                 hti.screenshot(html_str=explanation.as_html(),css_str=css, save_as="temp.png",size=(1300,350))
 
-            im=Image.open("temp.png")
+            im=Image.open("/tmp/temp.png")
             b64Image=PIL_to_base64(im)
             # os.remove("temp.png")
 
