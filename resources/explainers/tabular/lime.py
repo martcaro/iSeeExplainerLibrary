@@ -166,9 +166,17 @@ class Lime(Resource):
             css="body {background: white;}"
             if "png_height" in params_json and "png_width" in params_json:
                 size=(int(params_json["png_width"])/100,int(params_json["png_height"])/100)
-                hti.screenshot(html_str=explanation.as_html(),css_str=css, save_as="temp.png", size=size)   
+                print("1")
+                print(explanation.as_html())
+                hti.screenshot(html_str=explanation.as_html(),css_str=css, save_as="temp.png", size=size)  
+                print("2")
+                print(explanation.as_html())
             else:
+                print("3")
+                print(explanation.as_html())
                 hti.screenshot(html_str=explanation.as_html(),css_str=css, save_as="temp.png",size=(1300,350))
+                print("4")
+                print(explanation.as_html())
 
             im=Image.open("/tmp/temp.png")
             b64Image=PIL_to_base64(im)
