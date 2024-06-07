@@ -48,6 +48,7 @@ class SSIMCounterfactual(Resource):
                 train_data=train_data[sample_idx,:]
                 actual=actual[sample_idx]
             train_data = normalise_image_batch(train_data, model_info)
+
             return train_data,actual
            
         else:
@@ -169,7 +170,7 @@ class SSIMCounterfactual(Resource):
                 channel_axis=-1
 
             train_data,labels = self.nn_data(instance_label_raw, instance_label, model_info, data_file,output_names,sample=sample)
-            print(train_data.shape)
+            print(len(train_data))
             print(labels)
             cf_indices,cf_labels = self.nun(num_cf,instance,train_data,labels,channel_axis)
             print(cf_indices,cf_labels)
