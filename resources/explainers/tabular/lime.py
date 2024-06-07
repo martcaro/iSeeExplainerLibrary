@@ -182,7 +182,7 @@ class Lime(Resource):
             b64Image=PIL_to_base64(im)
             # os.remove("temp.png")
 
-            response={"type":"image","explanation":b64Image}#"explanation_llm":json.loads(json.dumps(dict(explanation.as_list())))}
+            response={"type":"image","explanation":b64Image,"explanation_llm":json.loads(json.dumps(dict(explanation.as_list(explanation.available_labels()[0]))))}
             return response
 
         except:
