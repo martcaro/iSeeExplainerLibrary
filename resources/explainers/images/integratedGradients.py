@@ -179,6 +179,7 @@ class IntegratedGradientsImage(Resource):
                 print("Heatmap")
                 print(heatmap.shape)
 
+                heatmap_img=heatmap
                 if(heatmap.shape[-1]==3): #it's an RGB image, we transform to grayscale to impose the heatmap
                    heatmap_img=Image.fromarray(heatmap).convert('L')
 
